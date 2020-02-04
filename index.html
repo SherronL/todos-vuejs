@@ -8,6 +8,20 @@
         <!--Loads css-->
         <link rel="stylesheet" href="css/main.css">
         <title>My VueJS app</title>
+        <style>
+            .isComplete{
+                text-decoration: line-through;
+            }
+            .container {
+            width: 190px;
+            height: 22px;
+            margin: 0;
+            }
+            
+            .right {
+                float: right;
+            }
+        </style>
     </head>
     <body>
 
@@ -35,17 +49,21 @@
              -->
             <ul v-for="(list, key, index) in lists"
             v-bind:key="list.id">
+            <div class='container'>
             <!-- render each todo-->
-            <li>{{list.item}} {{key}} {{index}}
+            <!-- mark the list as complete if the status is true-->
+            <li :class="{isComplete: list.status}">{{list.item}} {{key}}
                 
-                <!-- still need to modify the status value-->
+
+                <div class='right'>
                 <input type='checkbox' 
-                v-bind:status='list.status'>
-                <label id='text'>{{list.status}}</label>
-                
-                <button @click.prevent='deleteItem'>Delete</button>
+                v-model='list.status'>
+
+                <label id='statusText'></label>
+                <div class='right'>  <button @click.prevent='deleteItem'>Delete</button>
+            </div>
             </li>
-            
+        </div>
         </ul>
 
         </div>

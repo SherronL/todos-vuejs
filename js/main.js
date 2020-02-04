@@ -1,16 +1,17 @@
-// localStorage p
+// localStorage JSON parser
 var STORAGE_KEY = 'todos-vuejs'
-var todoStorage = {
+var listStorage = {
   fetch: function () {
-    var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-    todos.forEach(function (todo, index) {
-      todo.id = index
+    var lists = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+    lists.forEach(function (item, index) {
+      item.id = index
     })
-    todoStorage.uid = todos.length
-    return todos
+    listStorage.uid = lists.length
+    return lists
   },
-  save: function (todos) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+  // save to local 
+  save: function (lists) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(lists))
   }
 }
 
@@ -18,14 +19,8 @@ var app = new Vue({
     
     el: "#toDoVueApp",
     data: {
-        checked: false,
         title: 'Todos',
-        lists: [
-           {id: 0, item:'play games ', status: 'incomplete'},
-            {id: 1, item:'do the dishes ', status:'incomplete'},
-            {id: 2, item:'buy food ', status: 'incomplete'},
-            {id: 3, item:'get gas ', status: 'incomplete'}
-        ],
+        lists: listStorage.fetch(),
         // initialize newItem to be empty 
         newItem:'',
     },
@@ -34,10 +29,11 @@ var app = new Vue({
             let newId = this.lists.length + 1;
 
             if(this.newItem !== ''){
-                // new list instance
+                // new list instance with id, item and status
                 const newList = {
                     id:newId,
-                    item: this.newItem
+                    item: this.newItem,
+                    status: false
                 }
                 
                 // add new entry to existing list
@@ -49,23 +45,22 @@ var app = new Vue({
             }
         },
 
-        checkboxHandler: function(){
-        var checkbox = document.getElementById('box');
-        var text = document.getElementById('text');
-
-        if(checkbox.checked == true){
-            text.innerHTML = 'complete'
-        }
-        else {
-            text.innerHTML = 'incomplete'
-        }
-        },
-
-        deleteItem: function(){
-          this.lists.splice(0,1);
+        deleteItem: function(key){
+          this.lists.splice(key,1);
         }
     },
+
     mounted() {
 
     },
+
+    watch: {
+      lists:{
+        handler: function(lists){
+          listStorage.save(lists);
+        },
+        // watches the changes
+        deep: true
+      }
+    }
 });
