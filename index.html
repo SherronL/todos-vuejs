@@ -1,20 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <script src="https://unpkg.com/vue"></script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!--Loads css-->
         <link rel="stylesheet" href="css/main.css">
         <title>My VueJS app</title>
     </head>
     <body>
-        <div id="vueApp">
-            <h1 class="welcome">{{welcomeMessage}}</h1>
-            <input class="welcome" v-model="welcomeMessage" />
+
+        <!-- el -->
+        <div id="toDoVueApp">
+            <h1 v-text='title'></h1>
+            <!-- 
+            event handling
+            v-model displays live keyout input
+            listens to user keyboard press Enter 
+            then submits the item by calling additem
+            -->
+            <input v-model='newItem' v-on:keyup.enter='addItem' />
+            <span>
+                <!-- @click is the same as v-on:click-->
+                <!-- prevents default handler -->
+                <button @click.prevent='addItem'>Add</button>
+            </span>
+            <small>adding...{{newItem}}</small>
+            <h5>List of todos</h5>
+    
+            <!--
+            self declared named list 
+            binds the id to the list item
+             -->
+            <ul v-for="(list, key, index) in lists"
+            v-bind:key="list.id">
+            <!-- render each todo-->
+            <li>{{list.item}} {{key}} {{index}}
+                
+                <!-- still need to modify the status value-->
+                <input type='checkbox' 
+                v-bind:status='list.status'>
+                <label id='text'>{{list.status}}</label>
+                
+                <button @click.prevent='deleteItem'>Delete</button>
+            </li>
+            
+        </ul>
+
         </div>
-
-
         <script src="js/vue.min.js"></script>
         <script src="js/main.js"></script>
+
     </body>
 </html>
